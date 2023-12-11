@@ -1,66 +1,115 @@
-import { useState } from "react";
-import { StyleSheet, View } from 'react-native';
-import { Button, Input, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack'; // Importação correta
 
-import principal from "../telas/principal";
 
-export default function Login({navigation}) {
+import Login from './login';
+import Cadastro from './cadastro';
+import Principal from './principal';
 
-  const [email, setEmail] = useState(null)
-  const [password, setPassword] = useState (null)
 
-  const entrar = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'Principal'}]
-    })
-  }
+const AppNavigator = () => {
+ const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Principal" component={Principal} />
+      <Stack.Screen name="Inicio" component={Inicio} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Cadastro" component={Cadastro} />
+    </Stack.Navigator>
+  );
+};
 
+const Login = ({ navigation }) => {
+  const [cnpj, setCnpj] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    console.log('CNPJ:', cnpj, 'Password:', password);
+    navigation.navigate('Principal');
+  };
 
   return (
-    <View style={[styles.container, specificStyle.specificContainer]}>
-      <Text h1>EPICARE</Text>
-      <Input 
-      placeholder='Login'
-      leftIcon={{ type: 'font-awesome', name: 'envelope'}}
-      onChangeText={value => setEmail(value)}
-      keyboardType='email-address'
-      />
-
-      <Input 
-      placeholder='Password'
-      leftIcon={{ type: 'font-awesome', name: 'lock'}}
-      onChangeText={value => setPassword(value)}
-      secureTextEntry={true}
-      />
-
-      <Button 
-      icon={
-        <Icon 
-          name='check'
-          size={15}
-          color='white'
-        />
-      }
-        title='Entrar'
-        buttonStyle={specificStyle.button}
-        onPress={() => entrar()}
-      />
-
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.logo}>EPICARE</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>CNPJ</Text>
+          <TextInput
+            value={cnpj}
+            onChangeText={setCnpj}
+            style={styles.input}
+            placeholder="Enter your CNPJ"
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>SENHA</Text>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+            placeholder="Enter your password"
+            secureTextEntry
+          />
+        </View>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>ENTRAR</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
-}
+};
 
-const specificStyle = StyleSheet.create({
-  specificContainer: {
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
     backgroundColor: 'rgba(72, 77, 205, 0.54)',
-    alignItems: 'center',
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  logo: {
+    color: '#FFFFFF',
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 80,
+  },
+  inputContainer: {
+    alignSelf: 'stretch',
+    marginBottom: 20,
+  },
+  inputLabel: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    paddingLeft: 15,
+  },
+  input: {
+    backgroundColor: 'rgba(140, 90, 220, 0.5)',
+    borderRadius: 10,
+    fontSize: 16,
+    paddingLeft: 15,
+    paddingRight: 15,
+    height: 50, // You can adjust the height
+    marginTop: 5,
   },
   button: {
-    widht: '100%',
-    marginTop: 10
-  }
+    backgroundColor: 'rgba(140, 90, 220, 0.5)', // Adjust the color as needed
+    borderRadius: 10,
+    height: 50,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
+
+export default Login;

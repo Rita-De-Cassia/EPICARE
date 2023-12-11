@@ -1,137 +1,125 @@
-import { useState } from "react";
-import { StyleSheet, View } from 'react-native';
-import { Button, CheckBox, Input, Text} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaView, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function Cadastro({navigation}) {
+import Login from './login';
+import Inicio from './inicio';
+import Cadastro from './cadastro';
 
-  const [email, setEmail] = useState(null)
-  const [nome, setNome] = useState (null)
-  const [Cpf, setCpf] = useState (null)
-  const [telefone, setTelefone] = useState (null)
-  const [senha, setSenha] = useState (null)
-  const [isSelected, setSelected] = useState (false)
-  const [errorEmail, setErrorEmail] = useState(null)
-  const [errorNome, setErrorNome] = useState(null)
-  const [errorCpf, setErrorCpf] = useState(null)
-  const [errorTelefone, setErrorTelefone] = useState(null)
+const Cadastro = ({ navigation }) => {
+  const [nome, setNome] = useState('');
+  const [cnpj, setCnpj] = useState('');
+  const [cep, setCep] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
 
-  const validar = () => {
-    let error = false
-    setErrorEmail(null)
-    setErrorCpf(null)
+ const Stack = createStackNavigator();
+  const AppNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Inicio" component={Inicio} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Cadastro" component={Cadastro} />
+    </Stack.Navigator>
+  );
+};
 
-    if(email == null){
-      setErrorEmail('Preencha seu E-mail         corretamente')
-      error = true
-    }
-    if(Cpf == null){
-      setErrorEmail('Preencha seu CPF corretamente')
-      error = true
-    }
-    if(nome == null){
-      setErrorEmail('Preencha seu Nome')
-      error = true
-    }
-    if(telefone == null){
-      setErrorEmail('Preencha seu Telefone')
-      error = true
-    }
-    return !error
-  }
-  
 
-  const salvar = () => {
-    if (validar()){
-    console.log ('Cadastro Realizado com Sucesso')
-    }
-  }
+const handleLogin = () => {
+    navigation.navigate('Login');
+  };
 
   return (
-    <View style={[styles.container, specificStyle.specificContainer]}>
-      <Text h3>Cadastre-se</Text>
-      <Input 
-      placeholder='E-mail'
-      leftIcon={{ type: 'font-awesome', name: 'envelope'}}
-      onChangeText={value => 
-        setEmail(value)
-      }
-      keyboardType='email-address'
-      returnKeyType='done'
-      errorMessage={errorEmail}
-      />
-      <Input 
-      placeholder='Nome Completo'
-      leftIcon={{ type: 'font-awesome', name: 'user'}}
-      onChangeText={value => 
-        setNome(value)
-      }
-      returnKeyType='done'
-      errorMessage={errorNome}
-      />
-      <Input 
-      placeholder='Cpf'
-      leftIcon={{ type: 'font-awesome', name: 'id-card'}}
-      onChangeText={value => 
-        setCpf(value)
-      }
-      keyboardType='number-pad'
-      returnKeyType='done'
-      errorMessage={errorCpf}
-      />
-      <Input 
-      placeholder='Telefone'
-      leftIcon={{ type: 'font-awesome', name: 'phone'}}
-      onChangeText={value => 
-        setTelefone(value)
-      }
-      keyboardType='phone-pad'
-      returnKeyType='done'
-      errorMessage={errorTelefone}
-      />
-      <Input 
-      placeholder='Senha'
-      leftIcon={{ type: 'font-awesome', name: 'lock'}}
-      onChangeText={value => setSenha(value)}
-      returnKeyType='done'
-      />
-       
-      <CheckBox
-        title='Eu aceito os termos de uso'
-        checkedIcon='check'
-        uncheckedIcon='square-o'
-        checkedColor='purple'
-        uncheckedColor='red'
-        checked={isSelected}
-        onPress={() => setSelected(!isSelected)}
-      />
-
-      <Button 
-      icon={
-        <Icon 
-          name='user'
-          size={15}
-          color='white'
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.headerText}>EPICARE</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Nome da Empresa"
+          value={nome}
+          onChangeText={setNome}
+          style={styles.input}
         />
-      }
-        title='Salvar'
-        buttonStyle={specificStyle.button}
-        onPress={() => salvar()}
-      />      
-
-    </View>
+        <TextInput
+          placeholder="CNPJ da Empresa"
+          value={cnpj}
+          onChangeText={setCnpj}
+          style={styles.input}
+          keyboardType="numeric"
+        />
+        <TextInput
+          placeholder="CEP da Empresa"
+          value={cep}
+          onChangeText={setCep}
+          style={styles.input}
+          keyboardType="numeric"
+        />
+        <TextInput
+          placeholder="E-mail"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          keyboardType="email-address"
+        />
+        <TextInput
+          placeholder="Senha"
+          value={senha}
+          onChangeText={setSenha}
+          style={styles.input}
+          secureTextEntry
+        />
+        <TextInput
+          placeholder="Repetir a Senha"
+          value={confirmarSenha}
+          onChangeText={setConfirmarSenha}
+          style={styles.input}
+          secureTextEntry
+        />
+      </View>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>CADASTRAR</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
-}
+};
 
-const specificStyle = StyleSheet.create({
-  specificContainer: {
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
-    backgroundColor: 'rgba(72, 77, 205, 0.54)',
+    backgroundColor: '#7D7BFF',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    width: '90%',
+  },
+  input: {
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    fontSize: 16,
+  },
   button: {
-    widht: '100%',
-    marginTop: 10
-  }
+    backgroundColor: '#5E5DBA',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+    width: '90%',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
+
+export default Cadastro;
